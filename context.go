@@ -20,6 +20,7 @@ import (
 	"github.com/gin-contrib/sse"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/gin-gonic/gin/render"
+	"github.com/sirupsen/logrus"
 )
 
 // Content-Type MIME of the most common data formats.
@@ -57,6 +58,8 @@ type Context struct {
 
 	// Accepted defines a list of manually accepted formats for content negotiation.
 	Accepted []string
+
+	Log *logrus.Entry
 }
 
 /************************************/

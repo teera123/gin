@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin/render"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -152,7 +153,7 @@ func Default() *Engine {
 }
 
 func (engine *Engine) allocateContext() *Context {
-	return &Context{engine: engine}
+	return &Context{engine: engine, Log: logrus.NewEntry(logrus.StandardLogger())}
 }
 
 func (engine *Engine) Delims(left, right string) *Engine {
