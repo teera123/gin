@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/mattn/go-isatty"
+	"github.com/satori/go.uuid"
 )
 
 var (
@@ -44,6 +45,13 @@ func ErrorLoggerT(typ ErrorType) HandlerFunc {
 		if len(errors) > 0 {
 			c.JSON(-1, errors)
 		}
+	}
+}
+
+func LoggerWithRequestID() HandlerFunc {
+	return func(c *Context) {
+		c.Log = c.Log.WithField("request_id", uuid.NewV4().String())
+		c.Next()
 	}
 }
 
