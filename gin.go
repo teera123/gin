@@ -104,6 +104,8 @@ type Engine struct {
 	noMethod         HandlersChain
 	pool             sync.Pool
 	trees            methodTrees
+	logFormatter     logrus.Formatter
+	logLevel         logrus.Level
 }
 
 var _ IRouter = &Engine{}
@@ -153,7 +155,11 @@ func Default() *Engine {
 }
 
 func (engine *Engine) allocateContext() *Context {
-	return &Context{engine: engine, Log: logrus.NewEntry(logrus.StandardLogger())}
+	logger := logrus.StandardLogger()
+	logger.SetLevel(engine.logLevel)
+	logger.Formatter = engine.logFormatter
+
+	return &Context{engine: engine, Log: logrus.NewEntry(logger)}
 }
 
 func (engine *Engine) Delims(left, right string) *Engine {
@@ -207,6 +213,14 @@ func (engine *Engine) SetHTMLTemplate(templ *template.Template) {
 // SetFuncMap sets the FuncMap used for template.FuncMap.
 func (engine *Engine) SetFuncMap(funcMap template.FuncMap) {
 	engine.FuncMap = funcMap
+}
+
+func (engine *Engine) SetLogFormatter(formatter logrus.Formatter) {
+	engine.logFormatter = formatter
+}
+
+func (engine *Engine) SetLogLevel(level logrus.Level) {
+	engine.logLevel = level
 }
 
 // NoRoute adds handlers for NoRoute. It return a 404 code by default.
