@@ -50,7 +50,8 @@ func ErrorLoggerT(typ ErrorType) HandlerFunc {
 
 func LoggerWithRequestID() HandlerFunc {
 	return func(c *Context) {
-		c.Log = c.Log.WithField("request_id", uuid.NewV4().String())
+		id, _ := uuid.NewV4()
+		c.Log = c.Log.WithField("request_id", id.String())
 		c.Next()
 	}
 }
