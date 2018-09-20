@@ -15,11 +15,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	// Version is Framework's version.
-	Version                = "v1.3.0"
-	defaultMultipartMemory = 32 << 20 // 32 MB
-)
+const defaultMultipartMemory = 32 << 20 // 32 MB
 
 var (
 	default404Body   = []byte("404 page not found")
@@ -27,7 +23,10 @@ var (
 	defaultAppEngine bool
 )
 
+// HandlerFunc defines the handler used by gin middleware as return value.
 type HandlerFunc func(*Context)
+
+// HandlersChain defines a HandlerFunc array.
 type HandlersChain []HandlerFunc
 
 // Last returns the last handler in the chain. ie. the last handler is the main own.
@@ -38,12 +37,14 @@ func (c HandlersChain) Last() HandlerFunc {
 	return nil
 }
 
+// RouteInfo represents a request route's specification which contains method and path and its handler.
 type RouteInfo struct {
 	Method  string
 	Path    string
 	Handler string
 }
 
+// RoutesInfo defines a RouteInfo array.
 type RoutesInfo []RouteInfo
 
 // Engine is the framework's instance, it contains the muxer, middleware and configuration settings.
@@ -162,6 +163,7 @@ func (engine *Engine) allocateContext() *Context {
 	return &Context{engine: engine, Log: logrus.NewEntry(logger)}
 }
 
+// Delims sets template left and right delims and returns a Engine instance.
 func (engine *Engine) Delims(left, right string) *Engine {
 	engine.delims = render.Delims{Left: left, Right: right}
 	return engine
